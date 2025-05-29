@@ -107,7 +107,7 @@ export default function Home() {
       </main>
       <footer className="border-t py-6">
         <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
-          <p className="text-center text-sm text-muted-foreground">© 2023 Cleanify. All rights reserved.</p>
+          <p className="text-center text-sm text-muted-foreground">© 2025 Cleanify. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="/terms" className="text-sm text-muted-foreground underline underline-offset-4">
               Terms
