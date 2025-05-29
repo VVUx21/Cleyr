@@ -1,16 +1,17 @@
 const express = require('express');
 const cors = require('cors');
+const dotenv=require('dotenv')
 // const userRoutes = require('./routes/user');
-// const productRoutes = require('./routes/products');
+const productRoutes = require('./routes/Products');
 const ingredientRoute=require('./routes/Ingredients')
 const app = express();
-
+dotenv.config();
 app.use(cors());
 app.use(express.json());
 
 // app.use('/api/user', userRoutes);
 app.use("/api/ingredients",ingredientRoute)
-// app.use('/api/products', productRoutes);
+app.use('/api/products', productRoutes);
 
 app.listen(5000, () => {
     console.log(`Server running on port 5000`);

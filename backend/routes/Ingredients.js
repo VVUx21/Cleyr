@@ -37,6 +37,6 @@ function getIngredients(skinType, skinConcern, commitment, preferredProduct) {
 
 app.post("/suggest", (req, res) => {
     const { skinType, skinConcern, commitment, preferredProduct } = req.body;
-    res.json(getIngredients(skinType, skinConcern, commitment, preferredProduct))
+    res.json({ ingredients: getIngredients(skinType, skinConcern, commitment, preferredProduct) })
 })
 module.exports = app;
