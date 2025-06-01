@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 
 const nykaaScrap = async (query) => {
+    console.log(`Searching for: ${query}`);
     // Launch the browser and open a new blank page
     const browser = await puppeteer.launch({ headless: false, defaultViewport: null });
     const page = await browser.newPage();
@@ -19,10 +20,10 @@ const nykaaScrap = async (query) => {
     await page.waitForSelector('#product-list-wrap .productWrapper');
     // await page.waitForTimeout(7000);
     const products = await page.evaluate(() => {
-        const productEls = document.querySelectorAll('#product-list-wrap .productWrapper');
         const items = [];
+        const productEls = document.querySelectorAll('#product-list-wrap .productWrapper');
 
-        for (let i = 0; i < productEls.length && items.length < 20; i++) {
+        for (let i = 0; i < productEls.length && items.length < 2; i++) {
             const el = productEls[i];
             const name = el.querySelector('.css-xrzmfa')?.innerText;
             const link = 'https://www.nykaa.com' + el.querySelector('a')?.getAttribute('href');
@@ -35,9 +36,11 @@ const nykaaScrap = async (query) => {
 
         return items;
     });
-
     // console.log(products);
     await browser.close();
+    return products
 }
 
-nykaaScrap('serum for oily skin')
+// nykaaScrap('serum for oily skin')
+// getProducts()
+module.exports = nykaaScrap
