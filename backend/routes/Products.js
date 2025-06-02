@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express.Router();
-const getProducts = require('../utils/getProducts')
+const { getProducts, getIngredients } = require('../utils/extracter')
 const nykaaScrap = require('../scrapers/main')
 
 const formQuery = async (products, ingredients) => {
@@ -48,12 +48,13 @@ app.post("/", (req, res) => {
 })
 
 app.get("/", async (req, res) => {
-    const { commitment } = req.body;
+    const { skinType, skinConcern, commitment, preferredProduct } = req.body;
     const vals = getProducts(commitment)
     const steps = removeSame(vals);
+    const ingredients = getIngredients(skinType, skinConcern, commitment, preferredProduct)
     console.log(steps);
     // const steps = ['Cleanser', 'Moisturizer']; // based on commitment
-    const ingredients = ['Niacinamide', 'Ceramides']; // from your API
+    // const ingredients = ['Niacinamide', 'Ceramides']; // from your API
 
     if (!steps || !ingredients) {
         return res.status(400).json({ error: 'Missing required query params: steps and ingredients' });
