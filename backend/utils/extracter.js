@@ -33,9 +33,9 @@ const sheetName = workbook.SheetNames[0];
 const sheet = workbook.Sheets[sheetName];
 
 const data = XLSX.utils.sheet_to_json(sheet);
-function getIngredients(skinType, skinConcern, commitment, preferredProduct) {
+function getIngredients(skinType, skinConcerns, commitment, preferredProduct) {
     skinType = normalize(skinType);
-    skinConcern = normalize(skinConcern);
+    skinConcerns = Array.isArray(skinConcerns) ? skinConcerns.map(normalize) : [normalize(skinConcerns)];
     commitment = normalize(commitment);
     preferredProduct = normalize(preferredProduct);
 
@@ -47,7 +47,7 @@ function getIngredients(skinType, skinConcern, commitment, preferredProduct) {
         const rowProductPref = normalize(element['Preferred Skincare Ingredients/Products']);
         const rowCommit = normalize(element['Skincare Routine Commitment Level'])
 
-        if ((rowSkinType == skinType) && (rowConcern == skinConcern) && (rowCommit == commitment) && (rowProductPref == preferredProduct)) {
+        if ((rowSkinType == skinType) && (skinConcerns.includes(rowConcern)) && (rowCommit == commitment) && (rowProductPref == preferredProduct)) {
             return element['Essential Ingredients to Look For']?.split('•').map(i => i.trim()).filter(i => i);
         }
     }

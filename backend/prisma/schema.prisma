@@ -49,7 +49,7 @@ model UserPreferences {
   skinType             String
   skinConcerns         String[]
   commitment           String
-  preferredProduct     String[]
+  preferredProduct     String
   preferredIngredients String[]
 
   user User @relation(fields: [userId], references: [id])
