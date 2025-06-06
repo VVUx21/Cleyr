@@ -13,7 +13,7 @@ app.get('/', auth, async (req, res) => {
         preferredProduct
     } = req.body;
 
-    const preferredIngredients = getIngredients(skinType, skinConcerns, commitment, preferredProduct)
+    const preferredIngredients = getIngredients(skinType, skinConcerns, commitment)
     // console.log(preferredIngredients);
     try {
         const pref = await prisma.userPreferences.upsert({

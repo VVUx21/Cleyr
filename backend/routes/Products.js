@@ -2,13 +2,10 @@ const express = require('express');
 const app = express.Router();
 const { getProducts, getIngredients } = require('../utils/extracter')
 const nykaaScrap = require('../scrapers/main')
+const puppeteer = require('puppeteer-extra'); // not 'puppeteer'
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 
-const formQuery = async (products, ingredients) => {
-    const query = `${products} with ${ingredients}`
-    const nykaaRes = await nykaaScrap(query)
-
-    return { products, nykaaRes };
-};
 // const vals = getProducts('minimal')
 // console.log(vals);
 const removeSame = (vals) => {
@@ -42,35 +39,45 @@ const removeSame = (vals) => {
 // const lsFinal = removeSame(vals);
 // console.log(lsFinal);
 
-app.post("/", (req, res) => {
+app.post("/commit", (req, res) => {
     const { commitment } = req.body;
     res.json(getProducts(commitment))
 })
 
-app.get("/", async (req, res) => {
+app.post("/", async (req, res) => {
     const { skinType, skinConcern, commitment, preferredProduct } = req.body;
     if (!commitment || !skinType || !skinConcern) {
         return res.status(400).json({ error: 'Missing required query parameters' });
     }
-    const vals = getProducts(commitment)
+    const vals = getProducts(commitment);
     const steps = removeSame(vals);
-    const ingredients = getIngredients(skinType, skinConcern, commitment, preferredProduct)
+    const ingredients = getIngredients(skinType, skinConcern, commitment);
 
     if (!steps || !ingredients) {
         return res.status(400).json({ error: 'Missing required query params: steps and ingredients' });
     }
     try {
-        const queries = steps.map(step => formQuery(step.trim(), ingredients));
-        const results = await Promise.all(queries);
+        console.time("Puppeteer");
 
-        const resultObj = {};
-        steps.forEach((step, i) => {
-            resultObj[step] = results[i];
+        const browser = await puppeteer.launch({
+            headless: true,
+            defaultViewport: null,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
+        
+        const results = {};
+        for (const step of steps) {
+            const query = `${step.trim()} with ${ingredients}`;
+            const nykaaRes = await nykaaScrap(browser, query);
+            results[step] = { products: step, nykaaRes };
+        }
 
-        res.json(resultObj);
+        await browser.close();
+        console.timeEnd("Puppeteer");
+
+        res.json(results);
     } catch (err) {
-        res.status(500).json({ error: 'Error querying Nykaa' });
+        res.status(500).json({ error: err.message || 'Something went wrong' });
     }
 })
 module.exports = app;
