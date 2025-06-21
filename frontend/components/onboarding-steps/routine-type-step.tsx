@@ -16,19 +16,19 @@ export default function RoutineTypeStep() {
 
   const routineTypes: { value: RoutineType; label: string; description: string; steps: string }[] = [
     {
-      value: "minimal",
+      value: "A simple, no-fuss routine with just the essentials 3-4 steps",
       label: "Minimal",
       description: "A simple, no-fuss routine with just the essentials.",
       steps: "3-4 steps",
     },
     {
-      value: "standard",
+      value: "A balanced routine with targeted treatments 5-6 steps",
       label: "Standard",
       description: "A balanced routine with targeted treatments.",
       steps: "5-6 steps",
     },
     {
-      value: "comprehensive",
+      value: "A complete routine for maximum results 7+ steps",
       label: "Comprehensive",
       description: "A complete routine for maximum results.",
       steps: "7+ steps",

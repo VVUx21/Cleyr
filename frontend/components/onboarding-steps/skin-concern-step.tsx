@@ -18,27 +18,27 @@ export default function SkinConcernStep() {
 
   const skinConcerns: { value: SkinConcern; label: string; description: string }[] = [
     {
-      value: "acne",
+      value: "Pimples, blackheads, whiteheads, and clogged pores",
       label: "Acne & Breakouts",
       description: "Pimples, blackheads, whiteheads, and clogged pores",
     },
     {
-      value: "aging",
+      value: "Fine lines, wrinkles, loss of firmness and elasticity",
       label: "Signs of Aging",
       description: "Fine lines, wrinkles, loss of firmness and elasticity",
     },
     {
-      value: "dullness",
+      value: "Lack of radiance, rough texture, uneven skin tone",
       label: "Dullness & Uneven Texture",
       description: "Lack of radiance, rough texture, uneven skin tone",
     },
     {
-      value: "hyperpigmentation",
+      value: "Sun spots, post-acne marks, melasma, uneven skin tone",
       label: "Dark Spots & Hyperpigmentation",
       description: "Sun spots, post-acne marks, melasma, uneven skin tone",
     },
     {
-      value: "redness",
+      value: "Irritation, redness, reactivity to products",
       label: "Redness & Sensitivity",
       description: "Irritation, redness, reactivity to products",
     },
