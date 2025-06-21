@@ -1,13 +1,18 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 
-const nykaaScrap = async (query) => {
+puppeteer.use(StealthPlugin());
+
+const nykaaScrap = async (browser, query) => {
     console.log(`Searching for: ${query}`);
     // Launch the browser and open a new blank page
-    const browser = await puppeteer.launch({ headless: false, defaultViewport: null });
+    // const browser = await puppeteer.launch({ headless: false, defaultViewport: null });
     const page = await browser.newPage();
+    await page.setUserAgent(
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'
+    );
 
-    // Navigate the page to a URL
-    await page.goto('https://www.nykaa.com/');
+    await page.goto('https://www.nykaa.com/', { waitUntil: 'networkidle2' });
 
     // Set screen size
     // await page.setViewport({ width: 1080, height: 1024 });
@@ -37,7 +42,7 @@ const nykaaScrap = async (query) => {
         return items;
     });
     // console.log(products);
-    await browser.close();
+    await page.close();
     return products
 }
 
