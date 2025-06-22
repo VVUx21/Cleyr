@@ -1,7 +1,7 @@
 import type React from "react"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
-
+import { UserProvider } from "@/context/usercontext" 
 export default function OnboardingLayout({
   children,
 }: {
@@ -18,7 +18,12 @@ export default function OnboardingLayout({
         </div>
       </header>
       <main className="flex-1">
-        <div className="container max-w-screen-md py-8">{children}</div>
+        {/* Wrap children with UserProvider to provide user context */}
+        <div className="container max-w-screen-md py-8">
+          <UserProvider>
+            {children}
+          </UserProvider>
+        </div>
       </main>
     </div>
   )

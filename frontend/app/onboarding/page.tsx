@@ -1,6 +1,5 @@
 "use client"
-
-import { useEffect } from "react"
+import { useEffect} from "react"
 import { useRouter } from "next/navigation"
 import { useSkinCare } from "@/context/skin-care-context"
 import OnboardingStep from "@/components/onboarding-step"
@@ -9,17 +8,36 @@ import SkinConcernStep from "@/components/onboarding-steps/skin-concern-step"
 import RoutineTypeStep from "@/components/onboarding-steps/routine-type-step"
 import FaceScanStep from "@/components/onboarding-steps/face-scan-step"
 import SummaryStep from "@/components/onboarding-steps/summary-step"
+import { useUserContext } from "@/context/userstate"
+import React from "react"
 
-export default function OnboardingPage() {
+export default function OnboardingPage(onComplete: () => void) {
   const { userProfile, updateUserProfile } = useSkinCare()
   const router = useRouter()
-
+  const UserContext= useUserContext();
+  const Context = React.useContext(UserContext);
+  const User = Context?.User;
+  const quizAttempts = Context?.quizAttempts ?? 0;
   useEffect(() => {
-    // Reset current step if coming back to onboarding
-    if (userProfile.completedOnboarding) {
-      updateUserProfile({ currentStep: 0, completedOnboarding: false })
+  if (User === null) return;
+
+  if (userProfile.completedOnboarding) {
+    updateUserProfile({ currentStep: 0, completedOnboarding: false });
+  }
+
+  const handleStartQuizClick = () => {
+    if (!User) {
+      if (quizAttempts > 2) {
+        alert("Please sign in or sign up to continue with the quiz.");
+        router.push("/sign-in");
+        return;
+      }
+      router.push("/onboarding");
     }
-  }, [])
+  };
+
+  handleStartQuizClick();
+}, [User]);
 
   const handleComplete = () => {
     updateUserProfile({ completedOnboarding: true })
@@ -55,10 +73,10 @@ export default function OnboardingPage() {
   ]
 
   const currentStep = steps[userProfile.currentStep]
-
   return (
-    <div className="flex flex-col items-center">
-      <div className="mb-8 w-full">
+    <div className="flex flex-col items-center w-full">
+      {/* Progress Bar */}
+      <div className="mb-8 w-full px-4">
         <div className="mb-2 flex justify-between text-sm text-muted-foreground">
           <span>
             Step {userProfile.currentStep + 1} of {steps.length}
@@ -73,6 +91,7 @@ export default function OnboardingPage() {
         </div>
       </div>
 
+      {/* Onboarding Step Component */}
       <OnboardingStep
         title={currentStep.title}
         description={currentStep.description}

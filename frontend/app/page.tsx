@@ -1,15 +1,62 @@
+"use client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+import { SignInButton, SignUpButton, UserButton} from "@clerk/nextjs"
+import { useUserContext } from "@/context/userstate"
+import React from "react"
+import { useRouter } from "next/navigation"
 
 export default function Home() {
+    const UserContext= useUserContext();
+    const router = useRouter();
+    const Context = React.useContext(UserContext);
+    const User = Context?.User;
+    const quizAttempts = Context?.quizAttempts ?? 0;
+    const incrementQuizAttempts = Context?.incrementQuizAttempts ?? (() => {});
+  function handleStartQuizClick(e: React.MouseEvent) {
+    //console.log("Quiz attempts:", quizAttempts)
+    if (!User) {
+      if (quizAttempts > 2) {
+        e.preventDefault();
+        alert("Please sign in or sign up to continue with the quiz.");
+        router.push("/sign-in");
+        return;
+      }
+      incrementQuizAttempts();
+      // setQuizAttempts((prev) => prev + 1);
+      router.push("/onboarding");
+    } else {
+      // setQuizAttempts(0);
+      router.push("/onboarding");
+    }
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
-        <div className="container flex h-16 items-center px-4">
+        <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2 font-semibold">
             <span className="text-xl font-bold text-emerald-600">Cleanify</span>
           </div>
+          {
+            User ? (
+              <UserButton/>
+            ) : <div className="flex items-center gap-4">
+            <Link href="/sign-in">
+            <SignInButton>
+              <Button variant="ghost" className="text-emerald-600 hover:text-emerald-700">
+                Sign In
+              </Button>
+            </SignInButton>
+            </Link>
+            <SignUpButton mode="modal">
+              <Button variant="outline" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50">
+                Sign Up
+              </Button>
+            </SignUpButton>
+          </div>
+          }
         </div>
       </header>
       <main className="flex-1">
@@ -26,7 +73,7 @@ export default function Home() {
           </div>
           <div className="flex gap-4">
             <Link href="/onboarding">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+              <Button onClick={handleStartQuizClick} size="lg" className="bg-emerald-600 hover:bg-emerald-700">
                 Start Quiz <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -121,3 +168,4 @@ export default function Home() {
     </div>
   )
 }
+

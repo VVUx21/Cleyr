@@ -18,27 +18,27 @@ export default function SkinTypeStep() {
 
   const skinTypes: { value: SkinType; label: string; description: string }[] = [
     {
-      value: "dry",
+      value: "Feels tight, may have flaky patches, rarely gets oily",
       label: "Dry",
       description: "Feels tight, may have flaky patches, rarely gets oily",
     },
     {
-      value: "oily",
+      value: "Shiny appearance, enlarged pores, prone to breakouts",
       label: "Oily",
       description: "Shiny appearance, enlarged pores, prone to breakouts",
     },
     {
-      value: "combination",
+      value: "Oily T-zone (forehead, nose, chin) but dry cheeks",
       label: "Combination",
       description: "Oily T-zone (forehead, nose, chin) but dry cheeks",
     },
     {
-      value: "normal",
+      value: "Well-balanced, not too oily or dry, few imperfections",
       label: "Normal",
       description: "Well-balanced, not too oily or dry, few imperfections",
     },
     {
-      value: "sensitive",
+      value: "Easily irritated, may react to products with redness",
       label: "Sensitive",
       description: "Easily irritated, may react to products with redness",
     },

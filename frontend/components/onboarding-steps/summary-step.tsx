@@ -1,28 +1,63 @@
 "use client"
-
 import { useSkinCare } from "@/context/skin-care-context"
+import { useUserContext } from "@/context/userstate"
 import { Button } from "@/components/ui/button"
 import { Check } from "lucide-react"
 import Image from "next/image"
+import { useCallback } from "react"
+import React from "react"
 
 interface SummaryStepProps {
   onComplete: () => void
 }
 
 export default function SummaryStep({ onComplete }: SummaryStepProps) {
-  const { userProfile, updateUserProfile } = useSkinCare()
+  const { userProfile, updateUserProfile } = useSkinCare();
+  const UserContext= useUserContext();
+  const Context = React.useContext(UserContext);
+  const User = Context?.User;
+
+  const handleSubmitProfile = useCallback(async () => {
+    if (!User || !User.primaryEmailAddress?.emailAddress) {
+      console.error("User or email not available")
+      return
+    }
+
+    const payload = {
+      ...userProfile,
+      email_id: User.primaryEmailAddress.emailAddress, 
+    }
+
+    try {
+      const res = await fetch("/api/user-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      const result = await res.json()
+      if (!res.ok) throw new Error(result.error || "Something went wrong")
+
+      //console.log("✅ User profile updated:", result.data)
+      onComplete()
+    } catch (err) {
+      console.error("❌ Failed to submit user profile:", err)
+    }
+  }, [User, userProfile, onComplete])
+
+  //console.log("User Profile in Summary Step:", userProfile)
 
   const getSkinTypeLabel = () => {
     switch (userProfile.skinType) {
-      case "dry":
+      case "Oily T-zone (forehead, nose, chin) but dry cheeks":
         return "Dry"
-      case "oily":
+      case "Shiny appearance, enlarged pores, prone to breakouts":
         return "Oily"
-      case "combination":
-        return "Combination"
-      case "normal":
+      case "Well-balanced, not too oily or dry, few imperfections":
         return "Normal"
-      case "sensitive":
+      case "Feels tight, may have flaky patches, rarely gets oily":
+        return "Combination"
+      case "Easily irritated, may react to products with redness":
         return "Sensitive"
       default:
         return "Not specified"
@@ -31,15 +66,15 @@ export default function SummaryStep({ onComplete }: SummaryStepProps) {
 
   const getSkinConcernLabel = () => {
     switch (userProfile.skinConcern) {
-      case "acne":
+      case "Pimples, blackheads, whiteheads, and clogged pores":
         return "Acne & Breakouts"
-      case "aging":
+      case "Fine lines, wrinkles, loss of firmness and elasticity":
         return "Signs of Aging"
-      case "dullness":
+      case "Lack of radiance, rough texture, uneven skin tone":
         return "Dullness & Uneven Texture"
-      case "hyperpigmentation":
+      case "Sun spots, post-acne marks, melasma, uneven skin tone":
         return "Dark Spots & Hyperpigmentation"
-      case "redness":
+      case "Irritation, redness, reactivity to products":
         return "Redness & Sensitivity"
       default:
         return "Not specified"
@@ -48,11 +83,11 @@ export default function SummaryStep({ onComplete }: SummaryStepProps) {
 
   const getRoutineTypeLabel = () => {
     switch (userProfile.routineType) {
-      case "minimal":
+      case "A simple, no-fuss routine with just the essentials 3-4 steps":
         return "Minimal (3-4 steps)"
-      case "standard":
+      case "A balanced routine with targeted treatments 5-6 steps":
         return "Standard (5-6 steps)"
-      case "comprehensive":
+      case "A complete routine for maximum results 7+ steps":
         return "Comprehensive (7+ steps)"
       default:
         return "Not specified"
@@ -116,7 +151,7 @@ export default function SummaryStep({ onComplete }: SummaryStepProps) {
         >
           Back
         </Button>
-        <Button onClick={onComplete} className="bg-emerald-600 hover:bg-emerald-700">
+        <Button onClick={handleSubmitProfile} className="bg-emerald-600 hover:bg-emerald-700">
           Get My Routine
         </Button>
       </div>
