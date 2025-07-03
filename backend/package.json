@@ -21,7 +21,9 @@
     "path": "^0.12.7",
     "postgres": "^3.4.7",
     "prisma": "^6.8.2",
-    "puppeteer": "^24.9.0",
+    "puppeteer": "^24.10.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "xlsx": "^0.18.5"
   }
 }
