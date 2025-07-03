@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { DashboardData } from '@/lib/types';
+//import { DashboardData } from '@/lib/types';
 
 // Mock data - replace with actual database/API calls
 const mockProducts = [
@@ -139,7 +139,7 @@ export async function GET(request: NextRequest) {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    const data: DashboardData = {
+    const data: any = {
       products: mockProducts,
       educational: mockEducational
     };

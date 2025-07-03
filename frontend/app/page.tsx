@@ -24,7 +24,6 @@ export default function Home() {
         return;
       }
       incrementQuizAttempts();
-      // setQuizAttempts((prev) => prev + 1);
       router.push("/onboarding");
     } else {
       // setQuizAttempts(0);
@@ -168,4 +167,3 @@ export default function Home() {
     </div>
   )
 }
-

@@ -1,5 +1,4 @@
-
-      const data = [
+const data = [
         {
           "Skin type": "Normal",
           "Concern": "Clear Acne & Breakouts",

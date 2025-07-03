@@ -19,8 +19,15 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  images: {
-    unoptimized: true,
+   images: {
+      remotePatterns: [
+          {
+              hostname: "sfycdn.speedsize.com",
+          },
+          {
+            hostname:"images.unsplash.com"
+          }
+      ],
   },
   experimental: {
     webpackBuildWorker: true,
